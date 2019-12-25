@@ -689,35 +689,15 @@ for (let idx = 0; idx < input.length; idx++) {
   instruction.opCode = Number(curArr[3] + curArr[4]);
   instruction.c = Number(curArr[2]);
   instruction.b = Number(curArr[1]);
+  let param1 = instruction.c == 1 ? input[idx + 1] : input[input[idx + 1]];
+  let param2 = instruction.b == 1 ? input[idx + 2] : input[input[idx + 2]];
   switch (instruction.opCode) {
     case 1:
-      if (instruction.b == 0 && instruction.c == 0) {
-        input[input[idx + 3]] = input[input[idx + 1]] + input[input[idx + 2]];
-      }
-      if (instruction.b == 0 && instruction.c == 1) {
-        input[input[idx + 3]] = input[idx + 1] + input[input[idx + 2]];
-      }
-      if (instruction.b == 1 && instruction.c == 0) {
-        input[input[idx + 3]] = input[input[idx + 1]] + input[idx + 2];
-      }
-      if (instruction.b == 1 && instruction.c == 1) {
-        input[input[idx + 3]] = input[idx + 1] + input[idx + 2];
-      }
+      input[input[idx + 3]] = param1 + param2;
       idx += 3;
       break;
     case 2:
-      if (instruction.b == 0 && instruction.c == 0) {
-        input[input[idx + 3]] = input[input[idx + 1]] * input[input[idx + 2]];
-      }
-      if (instruction.b == 0 && instruction.c == 1) {
-        input[input[idx + 3]] = input[idx + 1] * input[input[idx + 2]];
-      }
-      if (instruction.b == 1 && instruction.c == 0) {
-        input[input[idx + 3]] = input[input[idx + 1]] * input[idx + 2];
-      }
-      if (instruction.b == 1 && instruction.c == 1) {
-        input[input[idx + 3]] = input[idx + 1] * input[idx + 2];
-      }
+      input[input[idx + 3]] = param1 * param2;
       idx += 3;
       break;
     case 3:
@@ -725,141 +705,28 @@ for (let idx = 0; idx < input.length; idx++) {
       idx += 1;
       break;
     case 4:
-      console.log(input[input[idx + 1]], "idx=", idx, instruction);
+      console.log(input[input[idx + 1]]);
       idx += 1;
       break;
     case 5:
-      if (
-        instruction.b == 0 &&
-        instruction.c == 0 &&
-        input[input[idx + 1]] != 0
-      ) {
-        idx = input[input[idx + 2]] - 1;
-        break;
-      }
-      if (instruction.b == 0 && instruction.c == 1 && input[idx + 1] != 0) {
-        idx = input[input[idx + 2]] - 1;
-        break;
-      }
-      if (
-        instruction.b == 1 &&
-        instruction.c == 0 &&
-        input[input[idx + 1]] != 0
-      ) {
-        idx = input[idx + 2] - 1;
-        break;
-      }
-      if (instruction.b == 1 && instruction.c == 1 && input[idx + 1] != 0) {
-        idx = input[idx + 2] - 1;
-        break;
-      }
-      idx += 2;
+      param1 != 0 ? (idx = param2 - 1) : (idx += 2);
+
       break;
     case 6:
-      if (
-        instruction.b == 0 &&
-        instruction.c == 0 &&
-        input[input[idx + 1]] == 0
-      ) {
-        idx = input[input[idx + 2]] - 1;
-        break;
-      }
-      if (instruction.b == 0 && instruction.c == 1 && input[idx + 1] == 0) {
-        idx = input[input[idx + 2]] - 1;
-        break;
-      }
-      if (
-        instruction.b == 1 &&
-        instruction.c == 0 &&
-        input[input[idx + 1]] == 0
-      ) {
-        idx = input[idx + 2] - 1;
-        break;
-      }
-      if (instruction.b == 1 && instruction.c == 1 && input[idx + 1] == 0) {
-        idx = input[idx + 2] - 1;
-        break;
-      }
-      idx += 2;
+      param1 == 0 ? (idx = param2 - 1) : (idx += 2);
       break;
     case 7:
-      if (
-        instruction.b == 0 &&
-        instruction.c == 0 &&
-        input[input[idx + 1]] < input[input[idx + 2]]
-      ) {
-        input[input[idx + 3]] = 1;
-        idx += 3;
-        break;
-      } else if (
-        instruction.b == 0 &&
-        instruction.c == 1 &&
-        input[idx + 1] < input[input[idx + 2]]
-      ) {
-        input[input[idx + 3]] = 1;
-        idx += 3;
-        break;
-      } else if (
-        instruction.b == 1 &&
-        instruction.c == 0 &&
-        input[input[idx + 1]] < input[idx + 2]
-      ) {
-        input[input[idx + 3]] = 1;
-        idx += 3;
-        break;
-      } else if (
-        instruction.b == 1 &&
-        instruction.c == 1 &&
-        input[idx + 1] < input[idx + 2]
-      ) {
-        input[input[idx + 3]] = 1;
-        idx += 3;
-        break;
-      } else {
-        input[input[idx + 3]] = 0;
-        idx += 3;
-        break;
-      }
-
+      param1 < param2
+        ? (input[input[idx + 3]] = 1)
+        : (input[input[idx + 3]] = 0);
+      idx += 3;
+      break;
     case 8:
-      if (
-        instruction.b == 0 &&
-        instruction.c == 0 &&
-        input[input[idx + 1]] == input[input[idx + 2]]
-      ) {
-        input[input[idx + 3]] = 1;
-        idx += 3;
-        break;
-      } else if (
-        instruction.b == 0 &&
-        instruction.c == 1 &&
-        input[idx + 1] == input[input[idx + 2]]
-      ) {
-        input[input[idx + 3]] = 1;
-        idx += 3;
-        break;
-      } else if (
-        instruction.b == 1 &&
-        instruction.c == 0 &&
-        input[input[idx + 1]] == input[idx + 2]
-      ) {
-        input[input[idx + 3]] = 1;
-        idx += 3;
-        break;
-      } else if (
-        instruction.b == 1 &&
-        instruction.c == 1 &&
-        input[idx + 1] == input[idx + 2]
-      ) {
-        input[input[idx + 3]] = 1;
-        idx += 3;
-        break;
-      } else {
-        input[input[idx + 3]] = 0;
-        idx += 3;
-        break;
-      }
-
+      param1 == param2
+        ? (input[input[idx + 3]] = 1)
+        : (input[input[idx + 3]] = 0);
+      idx += 3;
+      break;
     case 99:
       idx = input.length;
       break;
